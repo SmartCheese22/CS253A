@@ -4,7 +4,7 @@ This assignment implements a Car Rental System. It has been implemented in C++ l
 
 The program has three CSV files namely, cars.csv, rented_cars.csv and users.csv.
 
-The file [main.cpp](https://github.com/SmartCheese22/CS253A/blob/main/main.cpp) contains the source code, the classes and their functions.
+The file [main.cpp](https://github.com/SmartCheese22/CS253A/blob/main/main.cpp) contains the source code, the classes and their functions. We have a base User class and then Customer, Employee and Manager are derieved from the base class.
 
 [cars.csv](https://github.com/SmartCheese22/CS253A/blob/main/cars.csv) maintains the car database keeping a record of every car in the system. The database is structured as follows:  
 **{'Name of the Car','License Number','Condition of Car', 'Per Day Rent Cost', 'IsRented'}**  

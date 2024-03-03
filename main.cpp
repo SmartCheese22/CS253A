@@ -231,8 +231,6 @@ class Car
     void car_add();
     void car_update(string licenseNo);
     void car_delete(string licenseNo);
-    void car_search(string licenseNo);
-
 public:
     string licenseNo;
     string model;
@@ -404,10 +402,12 @@ void User::all_cars()
         {
             if (word != line.back())
             {
-                cout <<word<< " | ";
+                cout << word << " | ";
             }
-            else{
-                if(word == "0"){
+            else
+            {
+                if (word == "0")
+                {
                     cout << "Available to Rent";
                 }
                 else
@@ -441,7 +441,7 @@ void User ::rent_car(string carName, UserType usertype)
     }
     else
     {
-        readFile("cars.csv",content);
+        readFile("cars.csv", content);
         for (auto &line : content)
         {
             if (line[0] == carName)
@@ -479,7 +479,7 @@ void User ::rent_car(string carName, UserType usertype)
                     to_update.push_back(to_string(time(0)));
                     to_update.push_back(days);
                     writeFileAppend(to_update, "rented_cars.csv");
-                    cout << "You have to pay Rupees " << stoi(days) * cost<< " to rent the car\n";
+                    cout << "You have to pay Rupees " << stoi(days) * cost << " to rent the car\n";
                     cout << "\nCar rented Successfully! \n";
                     break;
                 }
@@ -509,7 +509,7 @@ void User::return_car(string licenseNo)
             if (elapsed > maxDays)
             {
                 fineDue += 1000 * (elapsed - maxDays);
-                damage = ((elapsed)*1.0) / (record + 1);
+                damage = ((elapsed) * 1.0) / (record + 1);
                 record -= 0.5 * (elapsed - maxDays) + 0.3 * damage;
                 if (record <= 0)
                     record = 0.0;
@@ -564,7 +564,6 @@ void User::return_car(string licenseNo)
     {
         cout << "The car is not rented by you or you have entered Invalid Details!\n";
     }
-
 }
 
 void User::rented_cars()
@@ -595,7 +594,6 @@ void User::rented_cars()
     {
         cout << "\nYou haven't rented any car as of now\n\n";
     }
-
 }
 
 bool User::check_availability(string licenseNo)
@@ -641,22 +639,20 @@ void User::logout()
 void User::clear_due()
 {
     cout << "Your pending due were Rupees " << fineDue << ".\n";
-    
-        fineDue = 0.0;
-        vector<vector<string>> content;
-        readFile("users.csv", content);
-        for (auto &line : content)
+
+    fineDue = 0.0;
+    vector<vector<string>> content;
+    readFile("users.csv", content);
+    for (auto &line : content)
+    {
+        if (line[1] == id)
         {
-            if (line[1] == id)
-            {
-                line[5] = to_string(fineDue);
-                break;
-            }
+            line[5] = to_string(fineDue);
+            break;
         }
-        writeFile(content, "users.csv");
-        cout << "Your pending Dues are cleared successfully!\n";
-    
-    
+    }
+    writeFile(content, "users.csv");
+    cout << "Your pending Dues are cleared successfully!\n";
 }
 
 void User::user_add()
@@ -835,7 +831,8 @@ void Manager::delete_user()
     string uid;
     cout << "Enter the user id of the user : \n";
     cin >> uid;
-    if(uid == id){
+    if (uid == id)
+    {
         cout << "Cannot remove self!\n";
         return;
     }
@@ -910,22 +907,22 @@ void Manager::update_user()
             if (c == '1')
             {
                 cout << "Enter the new value of the field : \n";
-            cin.ignore();
-            getline(cin, new_field);
+                cin.ignore();
+                getline(cin, new_field);
                 content[i][2] = new_field;
             }
             else if (c == '2')
             {
                 cout << "Enter the new value of the field : \n";
-            cin.ignore();
-            getline(cin, new_field);
+                cin.ignore();
+                getline(cin, new_field);
                 content[i][0] = new_field;
             }
             else if (c == '3')
             {
                 cout << "Enter the new value of the field : \n";
-            cin.ignore();
-            getline(cin, new_field);
+                cin.ignore();
+                getline(cin, new_field);
                 content[i][4] = new_field;
             }
             else
@@ -953,9 +950,12 @@ void Manager::add_car()
     cin >> licenseNo;
     cout << "Enter per day cost of the Car: \n";
     cin >> cost;
-    try {
+    try
+    {
         int value = stoi(cost);
-    } catch (invalid_argument&) {
+    }
+    catch (invalid_argument &)
+    {
         cout << "The input does not represent an valid Cost!" << endl;
         return;
     }
@@ -998,7 +998,8 @@ void Manager::delete_car()
 
     if (!found)
         cout << "Car not found.\n";
-    else{
+    else
+    {
         cout << "Car deleted Successfully!\n";
     }
 }
@@ -1115,7 +1116,6 @@ void Manager::see_rented_to_user()
                 }
             }
         }
-
     }
 }
 
@@ -1168,7 +1168,6 @@ void Car::show_duedate(string licenseNo)
         cout << due_time->tm_mday << "/" << 1 + due_time->tm_mon << "/" << 1900 + due_time->tm_year << "\n";
     }
 }
-
 
 void Manager::repair_car()
 {
