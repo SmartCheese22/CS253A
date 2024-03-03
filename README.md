@@ -40,7 +40,6 @@ Various Functionalities are provided to Each User of the System:
 * Delete Car
 * See rented Cars
 * Who has rented Which car
-* Some Additional functions
 
 ## Description of Working and Assumptions:
 
