@@ -3,9 +3,6 @@
 
 using namespace std;
 
-vector<vector<string>> content;
-vector<string> to_update;
-
 // Forward Declaration of Classes
 class User;
 class Customer;
@@ -21,7 +18,7 @@ enum UserType
 };
 
 // Function to read csv file and store in Content vector
-void readFile(string filename)
+void readFile(string filename, vector<vector<string>> &content)
 {
     vector<string> row;
     string line, word;
@@ -394,8 +391,8 @@ void User::login()
 
 void User::all_cars()
 {
-    content.clear();
-    readFile("cars.csv");
+    vector<vector<string>> content;
+    readFile("cars.csv", content);
 
     cout << "\nBelow are all the Cars. 1 at the end means it is currently rented and 0 means it is available to rent\n";
     cout << "The data is given in the form of\n Model,\t LicenseNo,\t Condition, Cost, IsRented\n";
@@ -419,17 +416,17 @@ void User::all_cars()
         }
         cout << "\n";
     }
-    content.clear();
 }
 
 void User ::rent_car(string carName, UserType usertype)
 {
-    content.clear();
+    vector<vector<string>> content;
+    vector<string> to_update;
     bool availability = false;
 
     int count = 0;
     content.clear();
-    readFile("rented_cars.csv");
+    readFile("rented_cars.csv", content);
     for (auto line : content)
     {
         if (line[0] == id)
@@ -444,7 +441,7 @@ void User ::rent_car(string carName, UserType usertype)
     }
     else
     {
-        readFile("cars.csv");
+        readFile("cars.csv",content);
         for (auto &line : content)
         {
             if (line[0] == carName)
@@ -489,14 +486,13 @@ void User ::rent_car(string carName, UserType usertype)
             }
         }
         writeFile(content, "cars.csv");
-        content.clear();
     }
 }
 
 void User::return_car(string licenseNo)
 {
-    content.clear();
-    readFile("rented_cars.csv");
+    vector<vector<string>> content;
+    readFile("rented_cars.csv", content);
     bool freed = false;
     float damage;
     for (int i = 0; i < content.size(); i++)
@@ -531,7 +527,7 @@ void User::return_car(string licenseNo)
                 cout << "\nThis has incurred you a fine of rupees " << 1000.0 * (elapsed - maxDays) << "\n";
             writeFile(content, "rented_cars.csv");
             content.clear();
-            readFile("cars.csv");
+            readFile("cars.csv", content);
             for (auto &line : content)
             {
                 if (line[1] == licenseNo)
@@ -549,7 +545,7 @@ void User::return_car(string licenseNo)
             writeFile(content, "cars.csv");
 
             content.clear();
-            readFile("users.csv");
+            readFile("users.csv", content);
             for (auto &line : content)
             {
                 if (line[1] == id)
@@ -568,14 +564,14 @@ void User::return_car(string licenseNo)
     {
         cout << "The car is not rented by you or you have entered Invalid Details!\n";
     }
-    content.clear();
+
 }
 
 void User::rented_cars()
 {
     int count = 1;
-    content.clear();
-    readFile("rented_cars.csv");
+    vector<vector<string>> content;
+    readFile("rented_cars.csv", content);
 
     for (int i = 0; i < content.size(); i++)
     {
@@ -599,13 +595,13 @@ void User::rented_cars()
     {
         cout << "\nYou haven't rented any car as of now\n\n";
     }
-    content.clear();
+
 }
 
 bool User::check_availability(string licenseNo)
 {
-    content.clear();
-    readFile("cars.csv");
+    vector<vector<string>> content;
+    readFile("cars.csv", content);
     string rentedBy;
     int count = 1;
     for (int i = 0; i < content.size(); i++)
@@ -632,7 +628,6 @@ bool User::check_availability(string licenseNo)
         cout << "You have rented the Car!\n";
     else
         cout << "\nCar is Not Available\n";
-    content.clear();
     return false;
 }
 
@@ -646,10 +641,10 @@ void User::logout()
 void User::clear_due()
 {
     cout << "Your pending due were Rupees " << fineDue << ".\n";
-    {
+    
         fineDue = 0.0;
-        content.clear();
-        readFile("users.csv");
+        vector<vector<string>> content;
+        readFile("users.csv", content);
         for (auto &line : content)
         {
             if (line[1] == id)
@@ -660,8 +655,8 @@ void User::clear_due()
         }
         writeFile(content, "users.csv");
         cout << "Your pending Dues are cleared successfully!\n";
-    }
-    content.clear();
+    
+    
 }
 
 void User::user_add()
@@ -802,24 +797,13 @@ void Employee::display_menu()
 
 void Manager::all_users()
 {
-    content.clear();
-    readFile("users.csv");
+    vector<vector<string>> content;
+    readFile("users.csv", content);
     cout << "\nBelow are all the users. 0 at the end signifies a customer, 1 signifies an Employee and 2 signifies Manager\n";
     cout << "\nThe data is given in the form of\n \tName, \tId, \tUserType\n\n";
     privacyPrint(content);
     content.clear();
 }
-
-// void Manager::all_cars()
-// {
-//     content.clear();
-//     readFile("cars.csv");
-
-//     cout << "Below are all the Cars. 1 at the end means it is currently rented and 0 means it is available to rent\n";
-//     cout << "The data is given in the form of Model, LicenseNo, Condition, Cost, IsRented\n";
-//     printData(content);
-//     content.clear();
-// }
 
 void Manager::add_user()
 {
@@ -851,9 +835,13 @@ void Manager::delete_user()
     string uid;
     cout << "Enter the user id of the user : \n";
     cin >> uid;
-    content.clear();
+    if(uid == id){
+        cout << "Cannot remove self!\n";
+        return;
+    }
+    vector<vector<string>> content;
     bool found = false;
-    readFile("users.csv");
+    readFile("users.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][1] == uid)
@@ -867,7 +855,7 @@ void Manager::delete_user()
     content.clear();
 
     vector<string> licenseNo;
-    readFile("rented_cars.csv");
+    readFile("rented_cars.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][0] == uid)
@@ -879,7 +867,7 @@ void Manager::delete_user()
     writeFile(content, "rented_cars.csv");
     content.clear();
 
-    readFile("cars.csv");
+    readFile("cars.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         for (int j = 0; j < licenseNo.size(); j++)
@@ -906,32 +894,38 @@ void Manager::update_user()
     cout << "1. Password\n";
     cout << "2. Name of the User\n";
     cout << "3. User Record\n";
-    content.clear();
+    vector<vector<string>> content;
     char c;
     // cout << "input not taken";
     cin >> c;
     // cout << "input taken";
     bool found = false;
-    readFile("users.csv");
+    readFile("users.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][1] == uid)
         {
             found = true;
             string new_field;
-            cout << "Enter the new value of the field : \n";
-            cin.ignore();
-            getline(cin, new_field);
             if (c == '1')
             {
+                cout << "Enter the new value of the field : \n";
+            cin.ignore();
+            getline(cin, new_field);
                 content[i][2] = new_field;
             }
             else if (c == '2')
             {
+                cout << "Enter the new value of the field : \n";
+            cin.ignore();
+            getline(cin, new_field);
                 content[i][0] = new_field;
             }
             else if (c == '3')
             {
+                cout << "Enter the new value of the field : \n";
+            cin.ignore();
+            getline(cin, new_field);
                 content[i][4] = new_field;
             }
             else
@@ -943,7 +937,7 @@ void Manager::update_user()
     }
     cout << "User updated\n";
     writeFile(content, "users.csv");
-    content.clear();
+
     if (!found)
         cout << "User was not found.\n\n";
 }
@@ -959,6 +953,12 @@ void Manager::add_car()
     cin >> licenseNo;
     cout << "Enter per day cost of the Car: \n";
     cin >> cost;
+    try {
+        int value = stoi(cost);
+    } catch (invalid_argument&) {
+        cout << "The input does not represent an valid Cost!" << endl;
+        return;
+    }
     fstream fout("cars.csv", ios::out | ios::app);
     fout << name << "," << licenseNo << ","
          << "100.0"
@@ -971,9 +971,9 @@ void Manager::delete_car()
     string licenseNo;
     cout << "Enter the license number of the Car : \n";
     cin >> licenseNo;
-    content.clear();
+    vector<vector<string>> content;
     bool found = false;
-    readFile("cars.csv");
+    readFile("cars.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][1] == licenseNo)
@@ -986,7 +986,7 @@ void Manager::delete_car()
     writeFile(content, "cars.csv");
     content.clear();
 
-    readFile("rented_cars.csv");
+    readFile("rented_cars.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][2] == licenseNo)
@@ -995,9 +995,12 @@ void Manager::delete_car()
         }
     }
     writeFile(content, "rented_cars.csv");
-    content.clear();
+
     if (!found)
         cout << "Car not found.\n";
+    else{
+        cout << "Car deleted Successfully!\n";
+    }
 }
 
 void Manager::update_car()
@@ -1011,10 +1014,10 @@ void Manager::update_car()
     cout << "3. Send Car to Mechanic ( improve the condition )\n";
     char c;
     cin >> c;
-    content.clear();
+    vector<vector<string>> content;
     bool found = false;
     string new_field;
-    readFile("cars.csv");
+    readFile("cars.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][1] == licenseNo)
@@ -1049,7 +1052,7 @@ void Manager::update_car()
     writeFile(content, "cars.csv");
     content.clear();
 
-    readFile("rented_cars.csv");
+    readFile("rented_cars.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][2] == licenseNo)
@@ -1075,10 +1078,10 @@ void Manager::see_rented_to_user()
     cout << "\nEnter Id of the User you want to know about :\n";
     cin >> uid;
     vector<string> licenseNo;
-    content.clear();
+    vector<vector<string>> content;
 
     int count = 1;
-    readFile("rented_cars.csv");
+    readFile("rented_cars.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][0] == uid)
@@ -1092,7 +1095,7 @@ void Manager::see_rented_to_user()
         cout << "\nNo Car has been rented by this User.\n\n";
     else
     {
-        readFile("cars.csv");
+        readFile("cars.csv", content);
         for (int d = 0; d < licenseNo.size(); d++)
         {
             for (int i = 0; i < content.size(); i++)
@@ -1112,15 +1115,15 @@ void Manager::see_rented_to_user()
                 }
             }
         }
-        content.clear();
+
     }
 }
 
 void Manager::see_rented_car_to(string &licenseNo)
 {
-    content.clear();
+    vector<vector<string>> content;
     int count = 0;
-    readFile("rented_cars.csv");
+    readFile("rented_cars.csv", content);
     for (int i = 0; i < content.size(); i++)
     {
         if (content[i][2] == licenseNo)
@@ -1136,10 +1139,10 @@ void Manager::see_rented_car_to(string &licenseNo)
 void Car::show_duedate(string licenseNo)
 {
 
-    content.clear();
+    vector<vector<string>> content;
     string uid;
     time_t stamp;
-    readFile("rented_cars.csv");
+    readFile("rented_cars.csv", content);
     int fl = 0;
     int days = 0;
     for (int i = 0; i < content.size(); i++)
@@ -1166,9 +1169,6 @@ void Car::show_duedate(string licenseNo)
     }
 }
 
-// void Car::rent_request(string carName, UserType usertype){
-//     rent_car(carName, usertype);
-// }
 
 void Manager::repair_car()
 {
@@ -1176,8 +1176,8 @@ void Manager::repair_car()
     string licenseNo;
     cin >> licenseNo;
     bool found = false;
-    content.clear();
-    readFile("cars.csv");
+    vector<vector<string>> content;
+    readFile("cars.csv", content);
     for (auto &line : content)
     {
         if (line[1] == licenseNo)
@@ -1194,7 +1194,6 @@ void Manager::repair_car()
     {
         cout << "Could not find the given License Number!\n";
     }
-    content.clear();
 }
 
 void Manager::display_menu()
