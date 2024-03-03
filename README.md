@@ -1,4 +1,4 @@
-##CS253 - Car Rental System
+### CS253 - Car Rental System
 
 This assignment implements a Car Rental System. It has been implemented in C++ language. File handling is for storing the data. The program has three CSV files namely, cars.csv, rented_cars.csv and users.csv.
 
@@ -20,27 +20,27 @@ Employees are given 15% discount on the cars per day rent.
 
 Various Functionalities are provided to Each User of the System:
 
-#Customer and Employee can:
-See all the Cars
-See cars rented by him
-Check if car available to rent
-Rent Car
-Return Car
-View Fine Due
-Clear Due
+## Customer and Employee can:
+* See all the Cars
+* See cars rented by him
+* Check if car available to rent
+* Rent Car
+* Return Car
+* View Fine Due
+* Clear Due
 
-#Manager can:
-Add user
-Modify User
-Delete User
-Add Car
-Modify Car
-Delete Car
-See rented Cars
-Who has rented Which car
-Some Additional functions
+# Manager can:
+* Add user
+* Modify User
+* Delete User
+* Add Car
+* Modify Car
+* Delete Car
+* See rented Cars
+* Who has rented Which car
+* Some Additional functions
 
-#Description of Working and Assumptions:
+## Description of Working and Assumptions:
 
 Initially the system prompts for login. Depending upon the users listed in the user database, the corresponding input Id of the user may login as Customer, Employee or Manager(For this case, a Default Manager is already present in the database who can add the other Users). The Users proceed according to the interface the are shown (which depends on their UserType i.e. Customer, Employee or Manager).
 
